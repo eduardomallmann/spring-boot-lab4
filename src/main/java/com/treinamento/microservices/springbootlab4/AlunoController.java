@@ -19,49 +19,50 @@ import java.util.List;
 @RequestMapping("/aluno")
 public class AlunoController {
 
-    private AlunoRepository alunoRepository;
+	private AlunoRepository alunoRepository;
 
-    public AlunoController(AlunoRepository alunoRepository) {
-        this.alunoRepository = alunoRepository;
-    }
+	public AlunoController(AlunoRepository alunoRepository) {
+		this.alunoRepository = alunoRepository;
+	}
 
-    @GetMapping
-    public ResponseEntity<List<Aluno>> listAlunos() {
-        return ResponseEntity.ok(alunoRepository.findAll());
-    }
+	@GetMapping
+	public ResponseEntity<List<Aluno>> listAlunos() {
+		return ResponseEntity.ok(alunoRepository.findAll());
+	}
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Aluno> getAluno(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(alunoRepository.getOne(id));
-    }
+	@GetMapping("/{id}")
+	public ResponseEntity<Aluno> getAluno(@PathVariable("id") Long id) {
+		return ResponseEntity.ok(alunoRepository.getOne(id));
+	}
 
-    @PostMapping
-    public ResponseEntity<Aluno> createAluno(@RequestBody Aluno aluno) {
-        return ResponseEntity.ok(alunoRepository.saveAndFlush(aluno));
-    }
+	@PostMapping
+	public ResponseEntity<Aluno> createAluno(@RequestBody Aluno aluno) {
+		return ResponseEntity.ok(alunoRepository.saveAndFlush(aluno));
+	}
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Aluno> updateAluno(@PathVariable("id") Long id, @RequestBody Aluno aluno) {
-        if (id.equals(aluno.getId())) {
-            return ResponseEntity.ok(alunoRepository.saveAndFlush(aluno));
-        } else {
-            throw new RestClientException("Id and object didn't match");
-        }
-    }
+	@PutMapping("/{id}")
+	public ResponseEntity<Aluno> updateAluno(@PathVariable("id") Long id, @RequestBody Aluno aluno) {
+		if (id.equals(aluno.getId())) {
+			return ResponseEntity.ok(alunoRepository.saveAndFlush(aluno));
+		} else {
+			throw new RestClientException("Id and object didn't match");
+		}
+	}
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteAluno(@PathVariable("id") Long id) {
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
-    }
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Void> deleteAluno(@PathVariable("id") Long id) {
+		alunoRepository.deleteById(id);
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+	}
 
-    @GetMapping("/nome/{nome}")
-    public ResponseEntity<List<Aluno>> findByNome(@PathVariable String nome) {
-        return ResponseEntity.ok(alunoRepository.findByNomeContaining(nome));
-    }
+	@GetMapping("/nome/{nome}")
+	public ResponseEntity<List<Aluno>> findByNome(@PathVariable String nome) {
+		return ResponseEntity.ok(alunoRepository.findByNomeContaining(nome));
+	}
 
-    @GetMapping("/nascimento/mes/corrente")
-    public ResponseEntity<List<Aluno>> findByDataNascimentoAtMesCorrente() {
-        int mesCorrente = Calendar.getInstance().get(Calendar.MONTH);
-        return ResponseEntity.ok(alunoRepository.findByDataNascimentoAtMesCorrente(mesCorrente));
-    }
+	@GetMapping("/nascimento/mes/corrente")
+	public ResponseEntity<List<Aluno>> findByDataNascimentoAtMesCorrente() {
+		int mesCorrente = Calendar.getInstance().get(Calendar.MONTH) + 1;
+		return ResponseEntity.ok(alunoRepository.findByDataNascimentoAtMesCorrente(mesCorrente));
+	}
 }
