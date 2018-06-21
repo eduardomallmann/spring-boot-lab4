@@ -10,6 +10,8 @@ import java.util.List;
 @Repository
 public interface AlunoRepository extends JpaRepository<Aluno, Long> {
 
+    Aluno findByEmail(String email);
+
     List<Aluno> findByNomeContaining(String nome);
 
     @Query("SELECT a FROM Aluno a WHERE MONTH(a.dataNascimento) = :mes")
